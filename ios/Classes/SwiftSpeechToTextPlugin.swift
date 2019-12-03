@@ -120,7 +120,7 @@ public class SwiftSpeechToTextPlugin: NSObject, FlutterPlugin {
     }
     
     private func setupSpeechRecognition( _ result: @escaping FlutterResult) {
-        recognizer = SFSpeechRecognizer()
+        recognizer = SFSpeechRecognizer(locale: Locale(identifier: "pt-BR"))
         guard recognizer != nil else {
             initResult( false, result );
             return
