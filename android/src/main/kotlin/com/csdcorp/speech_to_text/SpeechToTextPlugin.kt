@@ -169,6 +169,7 @@ class SpeechToTextPlugin(activity: Activity, channel: MethodChannel ):
 
       recognizerIntent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
         putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+        putExtra(RecognizerIntent.EXTRA_LANGUAGE, 'pt-BR')
         putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, application.packageName)
         putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true)
       }
