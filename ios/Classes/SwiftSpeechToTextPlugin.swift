@@ -152,7 +152,7 @@ public class SwiftSpeechToTextPlugin: NSObject, FlutterPlugin {
         inputNode.removeTap(onBus: busForNodeTap);
         do {
             if let rememberedAudioCategory = rememberedAudioCategory {
-                try self.audioSession.setCategory(rememberedAudioCategory)
+                try self.audioSession.setCategory(AVAudioSession.Category(rawValue: rememberedAudioCategory ))
             }
         }
         catch {
@@ -167,10 +167,11 @@ public class SwiftSpeechToTextPlugin: NSObject, FlutterPlugin {
         }
         do {
             listeningSound?.play()
-            rememberedAudioCategory = self.audioSession.category
-            try self.audioSession.setCategory(AVAudioSessionCategoryPlayAndRecord)
-            try self.audioSession.setMode(AVAudioSessionModeMeasurement)
-            try self.audioSession.setActive(true, with: .notifyOthersOnDeactivation)
+            rememberedAudioCategory = self.audioSession.category.rawValue
+            try self.audioSession.setCategory(AVAudioSession.Category.playAndRecord)
+            try self.audioSession.setMode(AVAudioSession.Mode.measurement)
+           // try self.audioSession.setActive(true, with: .notifyOthersOnDeactivation)
+            try self.audioSession.setActive(true)
             let inputNode = self.audioEngine.inputNode
             self.currentRequest = SFSpeechAudioBufferRecognitionRequest()
             guard let currentRequest = self.currentRequest else {
@@ -213,7 +214,7 @@ public class SwiftSpeechToTextPlugin: NSObject, FlutterPlugin {
 
 @available(iOS 10.0, *)
 extension SwiftSpeechToTextPlugin : SFSpeechRecognizerDelegate {
-    private func speechRecognizer(_ speechRecognizer: SFSpeechRecognizer, availabilityDidChange available: Bool) {
+    public func speechRecognizer(_ speechRecognizer: SFSpeechRecognizer, availabilityDidChange available: Bool) {
         let availability = available ? SpeechToTextStatus.available : SpeechToTextStatus.unavailable
         invokeFlutter( SwiftSpeechToTextCallbackMethods.notifyStatus, arguments: availability )
     }
@@ -251,7 +252,7 @@ extension SwiftSpeechToTextPlugin : SFSpeechRecognitionTaskDelegate {
 @available(iOS 10.0, *)
 extension SwiftSpeechToTextPlugin : AVAudioPlayerDelegate {
     
-    private func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer,
+    public func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer,
                                      successfully flag: Bool) {
         
     }
